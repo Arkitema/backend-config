@@ -1,0 +1,82 @@
+[tool.poetry]
+name = "arkiema-config"
+version = "0.1.0"
+description = "Configurations for Arkitema FastAPI apps"
+authors = ["Christian Kongsgaard <chrk@arkitema.com>"]
+repository = "https://github.com/Arkitema/backend-config"
+license = "Apache-2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+pydantic = "*"
+strawberry-graphql = {extras = ["fastapi"], version = ">=0.164.0"}
+fastapi-azure-auth = ">=4.0.0"
+aiocache = "*"
+SQLAlchemy = {version = ">=1.4.35", extras = ["asyncio"], optional = true}
+sqlmodel = {version = ">=0.0.8", optional = true }
+asyncpg = {version = "^0.26.0", optional = true }
+msgraph-core = "*"
+sendgrid = "*"
+requests = "*"
+opentelemetry-api = "*"
+opentelemetry-sdk = "*"
+prometheus-client = "*"
+opentelemetry-exporter-otlp = "*"
+opentelemetry-instrumentation-fastapi = "*"
+opentelemetry-instrumentation-logging = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+pytest-env = "*"
+pytest_httpx = "*"
+pytest-asyncio = "*"
+black = "^22.6.0"
+isort = "^5.10.1"
+pytest-mock = "^3.10.0"
+
+[tool.poetry.extras]
+database = ["SQLAlchemy", "sqlmodel", "asyncpg"]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
+
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+pythonpath = "src"
+testpaths = ["tests/"]
+
+env = [
+    "SERVER_NAME=Arkitema Test",
+    "SERVER_HOST=http://api.arkitema.com",
+    "POSTGRES_HOST=localhost",
+    "POSTGRES_USER=postgresuser",
+    "POSTGRES_PASSWORD=mypassword",
+    "POSTGRES_DB=arkitema",
+    "POSTGRES_PORT=5632",
+    "AAD_OPENAPI_CLIENT_ID=PALCEHOLDER",
+    "AAD_APP_CLIENT_ID=PALCEHOLDER",
+    "AAD_TENANT_ID=PALCEHOLDER",
+    "AAD_TEST_CLIENT_SECRET=PALCEHOLDER",
+    "STORAGE_ACCOUNT_URL=PALCEHOLDER",
+    "ROUTER_URL=http://router.url",
+    "STORAGE_CONTAINER_NAME=PALCEHOLDER",
+    "STORAGE_ACCESS_KEY=PLACEHOLDER",
+    "STORAGE_BASE_PATH=test",
+    "SPECKLE_TOKEN=PALCEHOLDER",
+    "AAD_GRAPH_SECRET=PLACEHOLDER",
+    "DEFAULT_AD_FQDN=PLACEHOLDER",
+    "SENDGRID_SECRET=c2VjcmV0",
+    "EMAIL_NOTIFICATION_FROM=no-reply@arkitema.com",
+    "INTERNAL_EMAIL_DOMAINS_LIST=arkitema,cowi,cowicloud",
+]
