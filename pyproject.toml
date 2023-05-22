@@ -31,8 +31,8 @@ pytest = "^7.0"
 pytest-env = "*"
 pytest_httpx = "*"
 pytest-asyncio = "*"
-black = "^22.6.0"
-isort = "^5.10.1"
+black = "==23.1.0"
+isort = "==5.12.0"
 pytest-mock = "^3.10.0"
 
 [tool.poetry.extras]
