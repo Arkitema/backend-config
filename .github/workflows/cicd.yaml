@@ -18,8 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+
       - name: Install poetry
         run: pipx install poetry
+
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.python_version }}
@@ -45,15 +47,16 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install poetry
+        run: pipx install poetry
+
       - uses: actions/setup-python@v4
         with:
           python-version: ${{ env.python_version }}
-          cache: 'pip'
+          cache: 'poetry'
 
       - name: Install dependencies
-        run: |
-          python -m pip install poetry
-          poetry install --all-extras
+        run: poetry install --all-extras
 
       - name: Publish Package
         run: poetry publish --build

@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "arkiema-config"
+name = "arkitema-config"
 version = "0.1.0"
 description = "Configurations for Arkitema FastAPI apps"
 authors = ["Christian Kongsgaard <chrk@arkitema.com>"]
