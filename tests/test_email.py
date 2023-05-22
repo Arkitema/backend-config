@@ -15,15 +15,11 @@ async def test_send_email(mocker):
     assert mail_mock.mock_calls[0][2]["from_email"] == "no-reply@arkitema.com"
     assert mail_mock.mock_calls[0][2]["to_emails"] == "test@email.com"
     assert mail_mock.mock_calls[0][2]["subject"] == "Mock Email"
-    assert (
-        mail_mock.mock_calls[0][2]["html_content"]
-        == ""
-    )
+    assert mail_mock.mock_calls[0][2]["html_content"] == ""
 
     assert len(sendgrid_mock.mock_calls) == 2
     assert sendgrid_mock.mock_calls[0][1] == ("c2VjcmV0",)
     assert sendgrid_mock.mock_calls[1][1] == ("mail_obj",)
-
 
 
 @pytest.mark.asyncio
