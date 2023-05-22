@@ -1,5 +1,6 @@
 import tomllib
 from pathlib import Path
+
 from arkitema_config import __version__
 
 

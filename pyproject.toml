@@ -48,6 +48,8 @@ target-version = ['py311']
 
 [tool.isort]
 profile = "black"
+line_length = 120
+py_version = "311"
 src_paths = ["src", "tests"]
 
 

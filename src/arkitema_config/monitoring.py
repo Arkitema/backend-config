@@ -10,10 +10,7 @@ from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from prometheus_client import REGISTRY, Counter, Gauge, Histogram
-from prometheus_client.openmetrics.exposition import (
-    CONTENT_TYPE_LATEST,
-    generate_latest,
-)
+from prometheus_client.openmetrics.exposition import CONTENT_TYPE_LATEST, generate_latest
 from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response

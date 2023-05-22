@@ -14,7 +14,7 @@ except (ImportError, ModuleNotFoundError):
 
 async def send_email(
     recipient: str,
-        subject: str,
+    subject: str,
     message_body: str = "",
     html_body: str | None = None,
 ) -> Response:
