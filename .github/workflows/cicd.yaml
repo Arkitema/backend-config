@@ -62,3 +62,16 @@ jobs:
         run: poetry publish --build
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_TOKEN }}
+
+      - name: Set Env
+        run: |
+          echo "TAG_VERSION=$(poetry version -s)" >> $GITHUB_ENV
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.TAG_VERSION }}
+          body: |
+            Release of ${{ env.TAG_VERSION }}
+          files: |
+            dist/*
