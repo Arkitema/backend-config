@@ -16,8 +16,8 @@ class ServerSettings(BaseSettings):
     SERVER_NAME: str
     SERVER_HOST: AnyHttpUrl
     BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = [
-        "http://localhost:3000",
-        "http://0.0.0.0:3000",
+        "http://localhost:4200",
+        "http://0.0.0.0:4200",
     ]
 
     # validators
@@ -77,7 +77,16 @@ class EmailSettings(BaseSettings):
         case_sensitive = True
 
 
-class Settings(ServerSettings, AzureSettings, PostgresSettings, EmailSettings):
+class MetricsSettings(BaseSettings):
+    OTLP_GRPC_ENDPOINT: AnyHttpUrl = "http://tempo-distributor.monitoring:4317"
+    ENABLE_METRICS: bool = True
+    ENABLE_TELEMETRY: bool = True
+
+    class Config:
+        case_sensitive = True
+
+
+class Settings(ServerSettings, AzureSettings, PostgresSettings, EmailSettings, MetricsSettings):
     ROUTER_URL: AnyHttpUrl
     AAD_GRAPH_SECRET: str
 
