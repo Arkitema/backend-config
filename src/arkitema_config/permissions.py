@@ -1,5 +1,6 @@
 import typing
 
+from fastapi_azure_auth.user import User
 from strawberry.permission import BasePermission
 from strawberry.types import Info
 
@@ -12,3 +13,9 @@ class IsAuthenticated(BasePermission):
             return True
         else:
             raise PermissionError("User is not authenticated")
+
+
+def is_super_admin(user: User) -> bool:
+    """Checks whether the user is an Admin and so can access all resources."""
+
+    return "lca_super_admin" in user.roles
