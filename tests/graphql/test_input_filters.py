@@ -38,6 +38,7 @@ from arkitema_config.graphql.input_filters import (
         "is_any_of",
         "json_contains",
         "json_contains_error",
+        "is_true",
     ],
 )
 def test_filter_model_query(entry_data, entry_model, entries, db_engine, filter_options, expected):
