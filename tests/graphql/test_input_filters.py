@@ -26,6 +26,7 @@ from arkitema_config.graphql.input_filters import (
         (FilterOptions(is_any_of=["70e94ba8-128c-4890-8291-b4982c0fb5f2", "5d02171c-483d-4c27-9cbb-20e9b7c6f802"]), 2),
         (FilterOptions(json_contains=json.dumps({"domains": "design"})), 2),
         (FilterOptions(json_contains="domains"), 3),
+        (FilterOptions(is_true=True), 0),
     ],
     ids=[
         "equal",

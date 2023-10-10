@@ -18,6 +18,7 @@ class FilterOptions:
     is_empty: Optional[bool] = None
     is_not_empty: Optional[bool] = None
     is_any_of: Optional[list[str]] = None
+    is_true: Optional[bool] = None
     json_contains: Optional[str] = None
 
 
@@ -39,6 +40,8 @@ def filter_model_query(model: SQLModelMetaclass, filters: BaseFilter, query: Opt
 
         if _filter.equal:
             query = query.where(field == _filter.equal)
+        elif _filter.is_true is not None:
+            query = query.where(field == _filter.is_true)
         elif _filter.contains:
             query = query.where(col(field).contains(_filter.contains))
         elif _filter.starts_with:

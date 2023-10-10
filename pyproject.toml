@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "arkitema-config"
-version = "0.1.5"
+version = "0.1.6"
 description = "Configurations for Arkitema FastAPI apps"
 authors = ["Christian Kongsgaard <chrk@arkitema.com>"]
 repository = "https://github.com/Arkitema/backend-config"
