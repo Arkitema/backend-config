@@ -1,5 +1,6 @@
-import json
+import datetime
 import os
+from unittest.mock import AsyncMock
 
 import pytest
 
@@ -32,40 +33,30 @@ def settings_env():
 
 @pytest.fixture
 async def mock_graph_client(mocker):
-    graphClient_mock = mocker.patch(
-        "arkitema_config.user.GraphClient",
+    graph_client_mock = mocker.patch(
+        "arkitema_config.user.GraphServiceClient",
     )
-    graph_obj = graphClient_mock.return_value
+    graph_client_obj = graph_client_mock.return_value
 
-    get_response = graph_obj.get.return_value
-    get_response.json.return_value = {"id": "123"}
+    return_user = mocker.MagicMock()
+    setattr(return_user, "mail", "test@email.com")
+    setattr(return_user, "id", "123")
+    setattr(return_user, "display_name", "test")
+    setattr(return_user, "company_name", "Name")
+    sign_in_mock = mocker.MagicMock()
+    setattr(return_user, "sign_in_activity", sign_in_mock)
+    setattr(sign_in_mock, "last_sign_in_date_time", datetime.date(2000, 5, 5))
 
-    post_response = graph_obj.post.return_value
-    post_response.status_code = 200
-    post_response.json.return_value = json.loads(
-        """{
-            "responses": [
-                {
-                    "status": 200,
-                    "body": {
-                        "email": "email@mail.com",
-                        "id": "123",
-                        "displayName": "test",
-                        "companyName": "Name",
-                        "signInActivity": {
-                            "lastSignInDateTime": "2000-05-05T12:00:00Z"
-                        }
-                    }
-                }
-            ]
-        }"""
-    )
+    get_mock = AsyncMock()
+    get_mock.get = AsyncMock(return_value=return_user)
+    graph_client_obj.users.by_user_id.return_value = get_mock
 
-    graphClient_mock.post_response = post_response
-    graphClient_mock.graph_obj = graph_obj
+    graph_client_obj.invitations.post = AsyncMock(return_value="RESPONSE")
+
+    graph_client_mock.graph_client_obj = graph_client_obj
 
     config.Settings()
 
-    yield graphClient_mock
+    yield graph_client_mock
 
     await user.cache.clear()

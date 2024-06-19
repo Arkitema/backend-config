@@ -5,9 +5,6 @@ import os
 from pathlib import Path
 
 import asyncpg
-from sqlmodel.ext.asyncio.session import AsyncSession
-
-from arkitema_config.connection import create_postgres_engine
 
 try:
     from core.config import settings
@@ -16,11 +13,11 @@ except (ImportError, ModuleNotFoundError):
 
     settings = config.Settings()
 
-logging.config.fileConfig(Path(__file__).parent.parent / "logging.conf", disable_existing_loggers=False)
+
 logger = logging.getLogger(__name__)
 
 
-async def main():
+async def load_production_database():
     sql_folder = Path("/app/db_backups")
     sql_folder.mkdir(exist_ok=True)
     logger.info(f"Created folder {sql_folder}")
@@ -118,3 +115,7 @@ async def prepare_db(sql_file: Path):
         raise e
     finally:
         await conn.close()
+
+
+if __name__ == "__main__":
+    asyncio.run(load_production_database())

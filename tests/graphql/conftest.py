@@ -23,7 +23,7 @@ def entry_model(db_engine):
     class Entry(SQLModel, table=True):
         id: Optional[str] = Field(default_factory=string_uuid, primary_key=True)
         name: str
-        meta_fields: dict = Field(default=dict, sa_column=Column(JSON), nullable=False)
+        meta_fields: dict = Field(default=dict, sa_column=Column(JSON))
 
     yield Entry
 

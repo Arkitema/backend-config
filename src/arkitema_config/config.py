@@ -1,6 +1,7 @@
 from typing import Any
 
-from pydantic import AnyHttpUrl, BaseSettings, PostgresDsn, validator
+from pydantic import AnyHttpUrl, ConfigDict, PostgresDsn, field_validator, model_validator
+from pydantic_settings import BaseSettings
 
 
 def convert_env_to_list(cls, v: str | list[str]) -> list[str] | str:
@@ -21,19 +22,20 @@ class ServerSettings(BaseSettings):
     ]
 
     # validators
-    _convert_to_list = validator("BACKEND_CORS_ORIGINS", allow_reuse=True)(convert_env_to_list)
+    _convert_to_list = field_validator("BACKEND_CORS_ORIGINS")(convert_env_to_list)
 
-    class Config:
-        case_sensitive = True
+    # configuration
+    model_config = ConfigDict(case_sensitive=True)
 
 
 class AzureSettings(BaseSettings):
     AAD_APP_CLIENT_ID: str
     AAD_TENANT_ID: str
+    AAD_OPENAPI_CLIENT_ID: str | None
     AAD_TEST_CLIENT_SECRET: str | None
 
-    class Config:
-        case_sensitive = True
+    # configuration
+    model_config = ConfigDict(case_sensitive=True)
 
 
 class PostgresSettings(BaseSettings):
@@ -43,25 +45,28 @@ class PostgresSettings(BaseSettings):
     POSTGRES_DB: str
     POSTGRES_PORT: str
     POSTGRES_SSL: bool = False
-    POSTGRES_MAX_OVERFLOW = 30
+    POSTGRES_MAX_OVERFLOW: int = 30
     POSTGRES_POOL_SIZE: int = 20
     SQLALCHEMY_DATABASE_URI: PostgresDsn | None = None
 
-    @validator("SQLALCHEMY_DATABASE_URI", pre=True)
-    def assemble_db_connection(cls, v: str | None, values: dict[str, Any]) -> Any:
-        if isinstance(v, str):
-            return v
-        return PostgresDsn.build(
-            scheme="postgresql+asyncpg",
-            user=values.get("POSTGRES_USER"),
-            password=values.get("POSTGRES_PASSWORD"),
-            host=values.get("POSTGRES_HOST"),
-            path=f"/{values.get('POSTGRES_DB') or ''}",
-            port=values.get("POSTGRES_PORT"),
-        )
+    @model_validator(mode="before")
+    @classmethod
+    def assemble_db_connection(cls, data: Any) -> Any:
+        if isinstance(data.get("SQLALCHEMY_DATABASE_URI"), str):
+            return data["SQLALCHEMY_DATABASE_URI"]
+        else:
+            data["SQLALCHEMY_DATABASE_URI"] = PostgresDsn.build(
+                scheme="postgresql+asyncpg",
+                username=data.get("POSTGRES_USER"),
+                password=data.get("POSTGRES_PASSWORD"),
+                host=data.get("POSTGRES_HOST"),
+                path=f"/{data.get('POSTGRES_DB') or ''}",
+                port=int(data.get("POSTGRES_PORT")) if data.get("POSTGRES_PORT") else None,
+            )
+        return data
 
-    class Config:
-        case_sensitive = True
+    # configuration
+    model_config = ConfigDict(case_sensitive=True)
 
 
 class EmailSettings(BaseSettings):
@@ -71,10 +76,10 @@ class EmailSettings(BaseSettings):
     DEFAULT_AD_FQDN: str
 
     # validators
-    _convert_to_list = validator("INTERNAL_EMAIL_DOMAINS_LIST", allow_reuse=True)(convert_env_to_list)
+    _convert_to_list = field_validator("INTERNAL_EMAIL_DOMAINS_LIST")(convert_env_to_list)
 
-    class Config:
-        case_sensitive = True
+    # configuration
+    model_config = ConfigDict(case_sensitive=True)
 
 
 class MetricsSettings(BaseSettings):
@@ -82,13 +87,13 @@ class MetricsSettings(BaseSettings):
     ENABLE_METRICS: bool = True
     ENABLE_TELEMETRY: bool = True
 
-    class Config:
-        case_sensitive = True
+    # configuration
+    model_config = ConfigDict(case_sensitive=True)
 
 
 class Settings(ServerSettings, AzureSettings, PostgresSettings, EmailSettings, MetricsSettings):
     ROUTER_URL: AnyHttpUrl
     AAD_GRAPH_SECRET: str
 
-    class Config:
-        case_sensitive = True
+    # configuration
+    model_config = ConfigDict(case_sensitive=True)
