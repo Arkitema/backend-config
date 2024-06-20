@@ -1,12 +1,12 @@
 import pytest
 
-from arkitema_config import email
+from lcaplatform_config import email
 
 
 @pytest.mark.asyncio
 async def test_send_email_no_kwargs(mocker):
-    mail_mock = mocker.patch("arkitema_config.email.Mail", return_value="mail_obj")
-    sendgrid_mock = mocker.patch("arkitema_config.email.SendGridAPIClient")
+    mail_mock = mocker.patch("lcaplatform_config.email.Mail", return_value="mail_obj")
+    sendgrid_mock = mocker.patch("lcaplatform_config.email.SendGridAPIClient")
     sendgrid_mock.return_value.send.return_value = "RESPONSE"
 
     result = await email.send_email("test@email.com", email_type=email.EmailType.TASK_ASSIGN)
@@ -27,8 +27,8 @@ async def test_send_email_no_kwargs(mocker):
 
 @pytest.mark.asyncio
 async def test_send_email_with_kwargs(mocker):
-    mail_mock = mocker.patch("arkitema_config.email.Mail", return_value="mail_obj")
-    sendgrid_mock = mocker.patch("arkitema_config.email.SendGridAPIClient")
+    mail_mock = mocker.patch("lcaplatform_config.email.Mail", return_value="mail_obj")
+    sendgrid_mock = mocker.patch("lcaplatform_config.email.SendGridAPIClient")
     sendgrid_mock.return_value.send.return_value = "RESPONSE"
     result = await email.send_email(
         "test@email.com", email_type=email.EmailType.TASK_COMMENT, **{"task": "test_task", "comment": "test_comment"}
@@ -50,8 +50,8 @@ async def test_send_email_with_kwargs(mocker):
 
 @pytest.mark.asyncio
 async def test_send_email_custom_body(mocker):
-    mail_mock = mocker.patch("arkitema_config.email.Mail", return_value="mail_obj")
-    sendgrid_mock = mocker.patch("arkitema_config.email.SendGridAPIClient")
+    mail_mock = mocker.patch("lcaplatform_config.email.Mail", return_value="mail_obj")
+    sendgrid_mock = mocker.patch("lcaplatform_config.email.SendGridAPIClient")
     sendgrid_mock.return_value.send.return_value = "RESPONSE"
 
     result = await email.send_email("test@email.com", html_body="Hello!<br>")

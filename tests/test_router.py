@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from strawberry.types import ExecutionResult
 
-from arkitema_config.router import ArkitemaGraphQLRouter
+from lcaplatform_config.router import ArkitemaGraphQLRouter
 
 
 @pytest.fixture
@@ -16,7 +16,7 @@ def mock_router(mocker) -> None:
     """
 
     mocker.patch("strawberry.fastapi.GraphQLRouter.__init__", return_value=None)
-    yield mocker.patch("arkitema_config.router.GraphQLRouter.process_result")
+    yield mocker.patch("lcaplatform_config.router.GraphQLRouter.process_result")
 
 
 @pytest.fixture

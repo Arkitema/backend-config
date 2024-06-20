@@ -5,7 +5,7 @@ import pytest
 from pydantic import BaseModel
 from sqlmodel import Session
 
-from arkitema_config.graphql.input_filters import (
+from lcaplatform_config.graphql.input_filters import (
     BaseFilter,
     FilterOptions,
     SortOptions,

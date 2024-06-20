@@ -1,4 +1,4 @@
-from arkitema_config import config
+from lcaplatform_config import config
 
 
 def test_config(settings_env):

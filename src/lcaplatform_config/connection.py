@@ -9,7 +9,7 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 try:
     from core.config import settings
 except (ImportError, ModuleNotFoundError):
-    from arkitema_config import config
+    from lcaplatform_config import config
 
     settings = config.Settings()
 

@@ -4,7 +4,7 @@ from sqlalchemy.ext.asyncio import AsyncEngine
 
 
 def test_create_postgres_engine(settings_env):
-    from arkitema_config.connection import create_postgres_engine
+    from lcaplatform_config.connection import create_postgres_engine
 
     engine = create_postgres_engine()
 
@@ -13,7 +13,7 @@ def test_create_postgres_engine(settings_env):
 
 
 def test_get_db(settings_env):
-    from arkitema_config.connection import get_db
+    from lcaplatform_config.connection import get_db
 
     db = get_db()
 

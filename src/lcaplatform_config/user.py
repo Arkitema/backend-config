@@ -8,12 +8,12 @@ from msgraph.generated.models.invitation import Invitation
 from msgraph.generated.users.item.user_item_request_builder import UserItemRequestBuilder
 from requests import Response
 
-from arkitema_config import exceptions
+from lcaplatform_config import exceptions
 
 try:
     from core.config import settings
 except (ImportError, ModuleNotFoundError):
-    from arkitema_config import config
+    from lcaplatform_config import config
 
     settings = config.Settings()
 

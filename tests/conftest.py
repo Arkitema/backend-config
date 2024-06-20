@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from arkitema_config import config, user
+from lcaplatform_config import config, user
 
 
 @pytest.fixture()
@@ -34,7 +34,7 @@ def settings_env():
 @pytest.fixture
 async def mock_graph_client(mocker):
     graph_client_mock = mocker.patch(
-        "arkitema_config.user.GraphServiceClient",
+        "lcaplatform_config.user.GraphServiceClient",
     )
     graph_client_obj = graph_client_mock.return_value
 

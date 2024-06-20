@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from arkitema_config import exceptions, user
+from lcaplatform_config import exceptions, user
 
 
 @pytest.mark.asyncio

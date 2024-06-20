@@ -1,17 +1,17 @@
 from fastapi import Depends, Security
 
-from arkitema_config.security import azure_scheme
+from lcaplatform_config.security import azure_scheme
 
 try:
     from core.config import settings
 except (ImportError, ModuleNotFoundError):
-    from arkitema_config import config
+    from lcaplatform_config import config
 
     settings = config.Settings()
 
 
 try:
-    from arkitema_config.connection import get_db
+    from lcaplatform_config.connection import get_db
 
     db_url = settings.SQLALCHEMY_DATABASE_URI
 

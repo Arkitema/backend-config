@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "lcaplatrom-config"
+name = "lcaplatrom_config"
 version = "0.2.0"
 description = "Configurations for Arkitema FastAPI apps"
 authors = ["Egidijus Lukosevicius <egls@cowi.com>"]

@@ -3,7 +3,7 @@ from fastapi_azure_auth import SingleTenantAzureAuthorizationCodeBearer
 try:
     from core.config import settings
 except (ImportError, ModuleNotFoundError):
-    from arkitema_config import config
+    from lcaplatform_config import config
 
     settings = config.Settings()
 

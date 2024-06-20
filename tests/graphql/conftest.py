@@ -5,7 +5,7 @@ import pytest
 from sqlalchemy import JSON, Column
 from sqlmodel import Field, Session, SQLModel, create_engine
 
-from arkitema_config.formatting import string_uuid
+from lcaplatform_config.formatting import string_uuid
 
 
 @pytest.fixture(scope="session")
