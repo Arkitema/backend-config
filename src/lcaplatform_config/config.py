@@ -60,7 +60,7 @@ class PostgresSettings(BaseSettings):
                 username=data.get("POSTGRES_USER"),
                 password=data.get("POSTGRES_PASSWORD"),
                 host=data.get("POSTGRES_HOST"),
-                path=f"/{data.get('POSTGRES_DB') or ''}",
+                path=data.get("POSTGRES_DB"),
                 port=int(data.get("POSTGRES_PORT")) if data.get("POSTGRES_PORT") else None,
             )
         return data

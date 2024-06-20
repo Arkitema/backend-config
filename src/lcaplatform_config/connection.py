@@ -32,7 +32,7 @@ def create_postgres_engine(as_async=True):
                     username=settings.POSTGRES_USER,
                     password=settings.POSTGRES_PASSWORD,
                     host=settings.POSTGRES_HOST,
-                    path=f"/{settings.POSTGRES_DB}",
+                    path=settings.POSTGRES_DB,
                     port=int(settings.POSTGRES_PORT) if settings.POSTGRES_PORT else None,
                 )
             ),
