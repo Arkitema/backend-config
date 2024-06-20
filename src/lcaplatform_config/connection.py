@@ -26,13 +26,15 @@ def create_postgres_engine(as_async=True):
         )
     else:
         return create_engine(
-            PostgresDsn.build(
-                scheme="postgresql",
-                username=settings.POSTGRES_USER,
-                password=settings.POSTGRES_PASSWORD,
-                host=settings.POSTGRES_HOST,
-                path=f"/{settings.POSTGRES_DB}",
-                port=int(settings.POSTGRES_PORT) if settings.POSTGRES_PORT else None,
+            str(
+                PostgresDsn.build(
+                    scheme="postgresql",
+                    username=settings.POSTGRES_USER,
+                    password=settings.POSTGRES_PASSWORD,
+                    host=settings.POSTGRES_HOST,
+                    path=f"/{settings.POSTGRES_DB}",
+                    port=int(settings.POSTGRES_PORT) if settings.POSTGRES_PORT else None,
+                )
             ),
             pool_pre_ping=True,
         )
