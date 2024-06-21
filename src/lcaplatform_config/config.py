@@ -32,7 +32,7 @@ class AzureSettings(BaseSettings):
     AAD_APP_CLIENT_ID: str
     AAD_TENANT_ID: str
     AAD_OPENAPI_CLIENT_ID: str | None
-    AAD_TEST_CLIENT_SECRET: str | None
+    AAD_TEST_CLIENT_SECRET: str | None = None
 
     # configuration
     model_config = ConfigDict(case_sensitive=True)
