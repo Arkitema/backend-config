@@ -14,13 +14,13 @@ class Connection(Generic[GenericType]):
     would be a connection that might have a `friendshipStartTime`
     """
 
-    page_info: "PageInfo"
+    page_info: "PageInfo[GenericType]"
     edges: list["Edge[GenericType]"]
     num_edges: int
 
 
 @strawberry.type
-class PageInfo:
+class PageInfo(Generic[GenericType]):
     """Pagination context to navigate objects with cursor-based pagination
 
     Instead of classic offset pagination via `page` and `limit` parameters,
