@@ -4,7 +4,7 @@ from unittest.mock import AsyncMock, MagicMock
 import pytest
 from strawberry.types import ExecutionResult
 
-from lcaplatform_config.router import ArkitemaGraphQLRouter
+from lcaplatform_config.router import LCAGraphQLRouter
 
 
 @pytest.fixture
@@ -73,7 +73,7 @@ async def test_router_logs_graphql_path_no_variables(
 ):
     """Test that the logger outputs the GraphQL path at INFO level when the query contains no variables."""
     with caplog.at_level(logging.INFO):
-        await ArkitemaGraphQLRouter().process_result(mock_request_0, mock_response)
+        await LCAGraphQLRouter().process_result(mock_request_0, mock_response)
 
     assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])
     assert log.levelname == "INFO"
@@ -86,7 +86,7 @@ async def test_router_logs_graphql_path_with_variables(
 ):
     """Test that the logger outputs the GraphQL path at INFO level when the query contains variables."""
     with caplog.at_level(logging.INFO):
-        await ArkitemaGraphQLRouter().process_result(mock_request_1, mock_response)
+        await LCAGraphQLRouter().process_result(mock_request_1, mock_response)
 
     assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])
     assert log.levelname == "INFO"
