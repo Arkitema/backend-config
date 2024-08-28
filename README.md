@@ -1,6 +1,6 @@
-# Arkitema FastAPI Configuration
+# LCA platfrom FastAPI Configuration
 
-Configurations for Arkitema FastAPI apps
+Configurations for LCA platform FastAPI apps
 
 # Getting Started
 

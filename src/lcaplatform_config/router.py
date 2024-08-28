@@ -8,7 +8,7 @@ from strawberry.types import ExecutionResult
 logger = logging.getLogger(__name__)
 
 
-class ArkitemaGraphQLRouter(GraphQLRouter):
+class LCAGraphQLRouter(GraphQLRouter):
     async def process_result(self, request: Request, result: ExecutionResult) -> GraphQLHTTPResponse:
         """
         Override method of parent class to log the GraphQL path that is called.

@@ -1,6 +1,7 @@
 from typing import Generic, Optional, TypeVar
 
 import strawberry
+from strawberry.federation.schema_directives import Shareable
 
 GenericType = TypeVar("GenericType")
 
@@ -31,10 +32,13 @@ class PageInfo(Generic[GenericType]):
         - https://relay.dev/graphql/connections.htm
     """
 
-    has_next_page: bool
-    has_previous_page: bool
-    start_cursor: Optional[str]
-    end_cursor: Optional[str]
+    # added shareable as workaround for error
+    # Non-shareable field "PageInfo.endCursor" is resolved from multiple subgraphs
+    # when used in multiple services
+    has_next_page: bool = strawberry.field(directives=[Shareable()])
+    has_previous_page: bool = strawberry.field(directives=[Shareable()])
+    start_cursor: Optional[str] = strawberry.field(directives=[Shareable()])
+    end_cursor: Optional[str] = strawberry.field(directives=[Shareable()])
 
 
 @strawberry.type
