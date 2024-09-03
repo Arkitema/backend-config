@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lcaplatform-config"
-version = "0.3.1"
+version = "0.3.2"
 description = "Configurations for LCA platform FastAPI apps"
 authors = ["Egidijus Lukosevicius <egls@cowi.com>"]
 repository = "https://github.com/Arkitema/backend-config"

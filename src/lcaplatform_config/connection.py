@@ -1,7 +1,8 @@
+from asyncio import current_task
 from typing import AsyncGenerator
 
 from pydantic import PostgresDsn
-from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_scoped_session, async_sessionmaker, create_async_engine
 from sqlmodel import create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -47,7 +48,8 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         class_=AsyncSession,
         expire_on_commit=False,
     )
-    async with local_session() as session:
+    scoped_session = async_scoped_session(local_session, scopefunc=current_task)
+    async with scoped_session() as session:
         try:
             yield session
         except Exception as e:
