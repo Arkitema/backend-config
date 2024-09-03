@@ -1,8 +1,7 @@
 from typing import AsyncGenerator
 
 from pydantic import PostgresDsn
-from sqlalchemy.ext.asyncio import create_async_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlmodel import create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -41,7 +40,7 @@ def create_postgres_engine(as_async=True):
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
-    local_session = sessionmaker(
+    local_session = async_sessionmaker(
         autocommit=False,
         autoflush=False,
         bind=create_postgres_engine(),
@@ -49,4 +48,10 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         expire_on_commit=False,
     )
     async with local_session() as session:
-        yield session
+        try:
+            yield session
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            await session.close()
