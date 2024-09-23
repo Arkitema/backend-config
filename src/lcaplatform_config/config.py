@@ -4,7 +4,7 @@ from pydantic import AnyHttpUrl, ConfigDict, PostgresDsn, field_validator, model
 from pydantic_settings import BaseSettings
 
 
-def convert_env_to_list(cls, v: str | list[str]) -> list[str] | str:
+def convert_env_to_list(cls, v: str | list[str]) -> list[str] | str:  # type: ignore
     if isinstance(v, str) and not v.startswith("["):
         return [i.strip() for i in v.split(",")]
     elif isinstance(v, list):
@@ -17,15 +17,15 @@ class ServerSettings(BaseSettings):
     SERVER_NAME: str
     SERVER_HOST: AnyHttpUrl
     BACKEND_CORS_ORIGINS: list[AnyHttpUrl] = [
-        "http://localhost:4200",
-        "http://0.0.0.0:4200",
+        "http://localhost:4200",  # type: ignore
+        "http://0.0.0.0:4200",  # type: ignore
     ]
 
     # validators
     _convert_to_list = field_validator("BACKEND_CORS_ORIGINS")(convert_env_to_list)
 
     # configuration
-    model_config = ConfigDict(case_sensitive=True)
+    model_config = ConfigDict(case_sensitive=True)  # type: ignore
 
 
 class AzureSettings(BaseSettings):
@@ -35,7 +35,7 @@ class AzureSettings(BaseSettings):
     AAD_TEST_CLIENT_SECRET: str | None = None
 
     # configuration
-    model_config = ConfigDict(case_sensitive=True)
+    model_config = ConfigDict(case_sensitive=True)  # type: ignore
 
 
 class PostgresSettings(BaseSettings):
@@ -66,7 +66,7 @@ class PostgresSettings(BaseSettings):
         return data
 
     # configuration
-    model_config = ConfigDict(case_sensitive=True)
+    model_config = ConfigDict(case_sensitive=True)  # type: ignore
 
 
 class EmailSettings(BaseSettings):
@@ -79,16 +79,16 @@ class EmailSettings(BaseSettings):
     _convert_to_list = field_validator("INTERNAL_EMAIL_DOMAINS_LIST")(convert_env_to_list)
 
     # configuration
-    model_config = ConfigDict(case_sensitive=True)
+    model_config = ConfigDict(case_sensitive=True)  # type: ignore
 
 
 class MetricsSettings(BaseSettings):
-    OTLP_GRPC_ENDPOINT: AnyHttpUrl = "http://tempo-distributor.monitoring:4317"
+    OTLP_GRPC_ENDPOINT: AnyHttpUrl = "http://tempo-distributor.monitoring:4317"  # type: ignore
     ENABLE_METRICS: bool = True
     ENABLE_TELEMETRY: bool = True
 
     # configuration
-    model_config = ConfigDict(case_sensitive=True)
+    model_config = ConfigDict(case_sensitive=True)  # type: ignore
 
 
 class Settings(ServerSettings, AzureSettings, PostgresSettings, EmailSettings, MetricsSettings):
@@ -96,4 +96,4 @@ class Settings(ServerSettings, AzureSettings, PostgresSettings, EmailSettings, M
     AAD_GRAPH_SECRET: str
 
     # configuration
-    model_config = ConfigDict(case_sensitive=True)
+    model_config = ConfigDict(case_sensitive=True)  # type: ignore

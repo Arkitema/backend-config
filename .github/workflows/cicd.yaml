@@ -34,10 +34,13 @@ jobs:
         run: poetry install --all-extras
 
       - name: Check Formatting
-        run: poetry run black . --check
+        run: poetry run ruff format .
 
-      - name: Check ISort
-        run: poetry run isort . --check
+      - name: Check lint
+        run: poetry run ruff check .
+      
+      - name: Check Typing
+        run: poetry run mypy .
 
       - name: Run PyTest
         run:  poetry run pytest

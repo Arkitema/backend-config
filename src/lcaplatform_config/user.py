@@ -6,7 +6,7 @@ from kiota_abstractions.base_request_configuration import RequestConfiguration
 from msgraph import GraphServiceClient
 from msgraph.generated.models.invitation import Invitation
 from msgraph.generated.users.item.user_item_request_builder import UserItemRequestBuilder
-from requests import Response
+from requests import Response  # type: ignore
 
 from lcaplatform_config import exceptions
 
@@ -28,7 +28,7 @@ async def get_aad_user_by_email(email: str) -> dict[str, str]:
     """Check if user exists in Azure Active Directory"""
     user_data = await cache.get(email, namespace="azure_emails")
     if user_data:
-        return user_data
+        return user_data  # type: ignore
 
     scopes = ["https://graph.microsoft.com/.default"]
     graph = GraphServiceClient(credentials=get_credentials(), scopes=scopes)
@@ -45,7 +45,7 @@ async def get_aad_user_by_email(email: str) -> dict[str, str]:
     user = await graph.users.by_user_id(user_principal_name).get()
     if user:
         await cache.add(email, user, namespace="azure_emails", ttl=60 * 5)
-    return user
+    return user  # type: ignore
 
 
 async def invite_user_to_aad(email: str, name: str, platform_url: str) -> Response:
@@ -110,25 +110,26 @@ async def get_users_from_azure(user_ids: str | list[str]) -> list[dict[str, str]
             user = await graph.users.by_user_id(user_id).get(request_configuration=request_configuration)
         except Exception:
             raise exceptions.MSGraphException(f"Failed to fetch users via Graph API: {user_id}")
-
-        email = user.mail
-        # some accounts have null emails
-        if not email:
-            if re.match(
-                r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$",
-                user.userPrincipalName or "",
-            ):
-                email = user.userPrincipalName
-            else:
-                email = "NA"
-        if user.sign_in_activity:
-            last_login = user.sign_in_activity.last_sign_in_date_time
-        users[user.id] = {
-            "user_id": user.id,
-            "name": user.display_name,
-            "email": email,
-            "company": user.company_name,
-            "last_login": last_login,
-        }
+        if user:
+            email = user.mail
+            # some accounts have null emails
+            if not email:
+                if re.match(
+                    r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$",
+                    user.userPrincipalName or "",
+                ):
+                    email = user.userPrincipalName
+                else:
+                    email = "NA"
+            user.last_login = None
+            if user.sign_in_activity:
+                last_login = user.sign_in_activity.last_sign_in_date_time
+            users[user.id] = {  # type: ignore
+                "user_id": user.id,
+                "name": user.display_name,
+                "email": email,
+                "company": user.company_name,
+                "last_login": last_login,
+            }
     await cache.multi_set(pairs=users.items(), ttl=60 * 5, namespace="azure_users")
     return list(users.values())

@@ -1,8 +1,9 @@
 from asyncio import current_task
-from typing import AsyncGenerator
+from typing import Any
+from collections.abc import AsyncGenerator
 
 from pydantic import PostgresDsn
-from sqlalchemy.ext.asyncio import async_scoped_session, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.asyncio import async_scoped_session, async_sessionmaker, create_async_engine, AsyncEngine
 from sqlmodel import create_engine
 from sqlmodel.ext.asyncio.session import AsyncSession
 
@@ -14,7 +15,7 @@ except (ImportError, ModuleNotFoundError):
     settings = config.Settings()
 
 
-def create_postgres_engine(as_async=True):
+def create_postgres_engine(as_async: bool = True) -> AsyncEngine | Any:
     if as_async:
         return create_async_engine(
             str(settings.SQLALCHEMY_DATABASE_URI),
@@ -53,7 +54,7 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
         try:
             yield session
         except Exception as e:
-            session.rollback()
+            await session.rollback()
             raise e
         finally:
             await session.close()

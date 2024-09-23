@@ -1,6 +1,6 @@
 import json
 from enum import Enum
-from typing import Optional
+from typing import Any
 
 import strawberry
 from sqlalchemy import desc
@@ -11,26 +11,28 @@ from sqlmodel.sql.expression import SelectOfScalar
 
 @strawberry.input
 class FilterOptions:
-    equal: Optional[str] = None
-    contains: Optional[str] = None
-    starts_with: Optional[str] = None
-    ends_with: Optional[str] = None
-    is_empty: Optional[bool] = None
-    is_not_empty: Optional[bool] = None
-    is_any_of: Optional[list[str]] = None
-    is_true: Optional[bool] = None
-    json_contains: Optional[str] = None
+    equal: str | None = None
+    contains: str | None = None
+    starts_with: str | None = None
+    ends_with: str | None = None
+    is_empty: bool | None = None
+    is_not_empty: bool | None = None
+    is_any_of: list[str] | None = None
+    is_true: bool | None = None
+    json_contains: str | None = None
 
 
 class BaseFilter:  # pragma: no cover
-    def dict(self):
+    def dict(self) -> dict[str, Any]:
         return self.__dict__
 
-    def keys(self):
+    def keys(self) -> list[str]:
         return [key for key, value in self.dict().items() if value]
 
 
-def filter_model_query(model: SQLModelMetaclass, filters: BaseFilter, query: Optional[SelectOfScalar] = None):
+def filter_model_query(
+    model: SQLModelMetaclass, filters: BaseFilter, query: SelectOfScalar | None = None
+) -> SelectOfScalar:
     if query is None:
         query = select(model)
 
@@ -49,9 +51,9 @@ def filter_model_query(model: SQLModelMetaclass, filters: BaseFilter, query: Opt
         elif _filter.ends_with:
             query = query.where(col(field).endswith(_filter.ends_with))
         elif _filter.is_empty:
-            query = query.where(or_(field == "", field == None))
+            query = query.where(or_(field == "", field == None))  # noqa: E711
         elif _filter.is_not_empty:
-            query = query.where(or_(field != "", field != None))
+            query = query.where(or_(field != "", field != None))  # noqa: E711
         elif _filter.is_any_of:
             query = query.where(col(field).in_(_filter.is_any_of))
         elif _filter.json_contains and str(field.type) == "JSON":
@@ -74,7 +76,7 @@ class SortOptions(Enum):
 
 
 def sort_model_query(
-    model: SQLModelMetaclass, sorters: BaseFilter, query: Optional[SelectOfScalar] = None
+    model: SQLModelMetaclass, sorters: BaseFilter, query: SelectOfScalar | None = None
 ) -> SelectOfScalar:
     if query is None:
         query = select(model)

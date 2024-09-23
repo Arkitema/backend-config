@@ -1,5 +1,4 @@
 import json
-from typing import Optional
 
 import pytest
 from pydantic import BaseModel
@@ -43,9 +42,9 @@ from lcaplatform_config.graphql.input_filters import (
 )
 def test_filter_model_query(entry_data, entry_model, entries, db_engine, filter_options, expected):
     class ModelFilter(BaseModel, BaseFilter):
-        id: Optional[FilterOptions] = None
-        name: Optional[FilterOptions] = None
-        meta_fields: Optional[FilterOptions] = None
+        id: FilterOptions | None = None
+        name: FilterOptions | None = None
+        meta_fields: FilterOptions | None = None
 
     if filter_options.json_contains:
         filters = ModelFilter(meta_fields=filter_options)
@@ -69,8 +68,8 @@ def test_filter_model_query(entry_data, entry_model, entries, db_engine, filter_
 )
 def test_sort_model_query(entry_data, entry_model, entries, db_engine, sort_options, expected):
     class ModelSort(BaseModel, BaseFilter):
-        id: Optional[SortOptions] = None
-        name: Optional[SortOptions] = None
+        id: SortOptions | None = None
+        name: SortOptions | None = None
 
     sorters = ModelSort(id=sort_options)
     with Session(db_engine) as session:

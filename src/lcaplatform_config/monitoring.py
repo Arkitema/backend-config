@@ -1,6 +1,5 @@
 import logging
 import time
-from typing import Tuple
 
 from opentelemetry import trace
 from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
@@ -89,7 +88,7 @@ class PrometheusMiddleware(BaseHTTPMiddleware):
         return response
 
     @staticmethod
-    def get_path(request: Request) -> Tuple[str, bool]:
+    def get_path(request: Request) -> tuple[str, bool]:
         for route in request.app.routes:
             match, child_scope = route.matches(request.scope)
             if match == Match.FULL:
@@ -116,4 +115,4 @@ def setting_otlp(app: ASGIApp, app_name: str, endpoint: str, log_correlation: bo
     if log_correlation:
         LoggingInstrumentor().instrument(set_logging_format=True)
 
-    FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
+    FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)  # type: ignore

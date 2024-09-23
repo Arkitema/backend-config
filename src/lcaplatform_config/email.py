@@ -1,7 +1,7 @@
 import logging
 from enum import Enum
 
-from requests import Response
+from requests import Response  # type: ignore
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -43,10 +43,10 @@ class EmailType(Enum):
     )
 
 
-async def send_email(
+async def send_email(  # type: ignore
     recepient: str,
     email_type: EmailType = EmailType.INVITE_TO_LCA,
-    html_body: str = None,
+    html_body: str | None = None,
     **kwargs,
 ) -> Response:
     """
@@ -94,6 +94,6 @@ async def send_email(
         response = sg.send(message)
     except Exception as e:
         logger.error(e)
-        response = e.body
+        response = e.body  # type: ignore
 
     return response

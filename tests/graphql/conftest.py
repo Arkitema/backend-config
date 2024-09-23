@@ -1,5 +1,4 @@
 import os
-from typing import Optional
 
 import pytest
 from sqlalchemy import JSON, Column
@@ -21,7 +20,7 @@ def db_engine():
 @pytest.fixture(scope="session")
 def entry_model(db_engine):
     class Entry(SQLModel, table=True):
-        id: Optional[str] = Field(default_factory=string_uuid, primary_key=True)
+        id: str | None = Field(default_factory=string_uuid, primary_key=True)
         name: str
         meta_fields: dict = Field(default=dict, sa_column=Column(JSON))
 
