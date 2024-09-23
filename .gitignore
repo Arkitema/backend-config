@@ -146,3 +146,6 @@ venv-shared-config-backend-3-10
 .idea
 .vs
 .vscode
+
+# ruff
+.ruff_cache

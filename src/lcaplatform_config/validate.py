@@ -1,5 +1,3 @@
-from typing import Union
-
 import httpx
 from aiocache import cached
 from fastapi_azure_auth.user import User
@@ -13,7 +11,7 @@ except (ImportError, ModuleNotFoundError):
 
 
 @cached(ttl=60)
-async def project_exists(project_id: str, token: str) -> Union[bool, list[dict]]:
+async def project_exists(project_id: str, token: str) -> bool | list[dict]:
     """
     Checks whether the project exists. The function is cached with a decorator.
     Args:
@@ -48,7 +46,7 @@ async def project_exists(project_id: str, token: str) -> Union[bool, list[dict]]
         data = response.json()
         if response.is_error or data.get("errors"):
             return False
-        return data.get("data")
+        return data.get("data")  # type: ignore
 
 
 def is_super_admin(user: User) -> bool:

@@ -17,7 +17,7 @@ except (ImportError, ModuleNotFoundError):
 logger = logging.getLogger(__name__)
 
 
-async def load_production_database():
+async def load_production_database() -> None:
     sql_folder = Path("/app/db_backups")
     sql_folder.mkdir(exist_ok=True)
     logger.info(f"Created folder {sql_folder}")
@@ -35,10 +35,10 @@ async def load_production_database():
     await load_latest_db(sql_file)
 
 
-async def download_latest_db(sql_path: Path, db_config: dict):
+async def download_latest_db(sql_path: Path, db_config: dict) -> None:
     cmd = (
         f"pg_dump -h {db_config.get('host')} -U {db_config.get('user')} "
-        f"-p {db_config.get('port')} -d {db_config.get('database')} > {str(sql_path)}"
+        f"-p {db_config.get('port')} -d {db_config.get('database')} > {sql_path!s}"
     )
 
     logger.info("Starting downloading database")
@@ -47,7 +47,7 @@ async def download_latest_db(sql_path: Path, db_config: dict):
         cmd,
         stderr=asyncio.subprocess.PIPE,
         stdout=asyncio.subprocess.PIPE,
-        env={"PGPASSWORD": db_config.get("password")},
+        env={"PGPASSWORD": db_config.get("password")},  # type: ignore
     )
 
     stdout, stderr = await process.communicate()
@@ -59,10 +59,10 @@ async def download_latest_db(sql_path: Path, db_config: dict):
         logger.error(stderr.decode())
 
 
-async def load_latest_db(sql_path: Path):
+async def load_latest_db(sql_path: Path) -> None:
     cmd = (
         f"psql -h {settings.POSTGRES_HOST} -U {settings.POSTGRES_USER} "
-        f"-p {settings.POSTGRES_PORT} -d {settings.POSTGRES_DB} -f {str(sql_path)}"
+        f"-p {settings.POSTGRES_PORT} -d {settings.POSTGRES_DB} -f {sql_path!s}"
     )
 
     logger.info("Starting loading database")
@@ -83,13 +83,13 @@ async def load_latest_db(sql_path: Path):
         logger.error(stderr.decode())
 
 
-async def create_azure_roles(connection):
+async def create_azure_roles(connection: asyncpg.Connection) -> None:
     logger.info("Creating Azure roles")
     await connection.execute("CREATE ROLE azure_pg_admin")
     await connection.execute("CREATE ROLE lcadbadmin")
 
 
-async def prepare_db(sql_file: Path):
+async def prepare_db(sql_file: Path) -> None:
     logger.info(f"Loading downloaded database: {sql_file}")
     conn = await asyncpg.connect(
         user=settings.POSTGRES_USER,

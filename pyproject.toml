@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "lcaplatform-config"
-version = "0.3.3"
+version = "0.3.4"
 description = "Configurations for LCA platform FastAPI apps"
 authors = ["Egidijus Lukosevicius <egls@cowi.com>"]
 repository = "https://github.com/Arkitema/backend-config"
@@ -30,6 +30,8 @@ azure-identity = "*"
 msgraph-sdk = "*"
 sqlmodel = "*"
 asyncpg = "*"
+mypy = "*"
+ruff = "*" 
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.0"
@@ -46,17 +48,6 @@ database = ["SQLAlchemy", "sqlmodel", "asyncpg"]
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
-
-[tool.black]
-line-length = 120
-target-version = ['py311']
-
-[tool.isort]
-profile = "black"
-line_length = 120
-py_version = "311"
-src_paths = ["src", "tests"]
-
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
@@ -88,3 +79,82 @@ env = [
     "EMAIL_NOTIFICATION_FROM=no-reply@arkitema.com",
     "INTERNAL_EMAIL_DOMAINS_LIST=arkitema,cowi,cowicloud",
 ]
+
+[tool.coverage.run]
+omit = ["src/import_data/*.py", "src/initialize.py", "src/main.py"]
+
+[tool.black]
+line-length = 120
+target-version = ['py310']
+extend-exclude = """
+^/alembic
+"""
+
+[tool.isort]
+profile = "black"
+src_paths = ["src", "tests"]
+
+[tool.mypy]
+python_version = "3.11"
+disallow_untyped_defs = true
+show_error_codes = true
+no_implicit_optional = true
+warn_return_any = true
+warn_unused_ignores = true
+exclude = ["alembic", "dist", "src/schema", "tests"]
+ignore_missing_imports = true
+plugins = ["pydantic.mypy", "strawberry.ext.mypy_plugin"] 
+
+[tool.ruff]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+    "alembic",
+]
+
+src = ["src", "tests"]
+line-length = 120
+indent-width = 4
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F", "UP", "RUF"]
+ignore = [
+    "E712",  # Allow using if x == False, as it's not always equivalent to if x.
+    "E501",  # Supress line-too-long warnings: trust black's judgement on this one.
+    "UP017",  # Allow timezone.utc instead of datetime.UTC.
+    "D213",
+]
+fixable = ["ALL"]
+unfixable = []
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"

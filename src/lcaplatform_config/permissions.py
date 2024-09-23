@@ -8,7 +8,7 @@ from strawberry.types import Info
 class IsAuthenticated(BasePermission):
     message = "User is not authenticated"
 
-    def has_permission(self, source: typing.Any, info: Info, **kwargs) -> bool:
+    def has_permission(self, source: typing.Any, info: Info, **kwargs) -> bool:  # type: ignore
         if info.context.get("user"):
             return True
         else:

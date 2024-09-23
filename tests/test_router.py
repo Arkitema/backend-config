@@ -75,9 +75,9 @@ async def test_router_logs_graphql_path_no_variables(
     with caplog.at_level(logging.INFO):
         await LCAGraphQLRouter().process_result(mock_request_0, mock_response)
 
-    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])
+    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
     assert log.levelname == "INFO"
-    assert log.message == f'Calling GraphQL path: "tags"'
+    assert log.message == 'Calling GraphQL path: "tags"'
 
 
 @pytest.mark.asyncio
@@ -88,6 +88,6 @@ async def test_router_logs_graphql_path_with_variables(
     with caplog.at_level(logging.INFO):
         await LCAGraphQLRouter().process_result(mock_request_1, mock_response)
 
-    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])
+    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
     assert log.levelname == "INFO"
-    assert log.message == f'Calling GraphQL path: "arkitemaProject"'
+    assert log.message == 'Calling GraphQL path: "arkitemaProject"'

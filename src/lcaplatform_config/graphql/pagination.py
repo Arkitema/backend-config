@@ -1,4 +1,4 @@
-from typing import Generic, Optional, TypeVar
+from typing import Generic, TypeVar
 
 import strawberry
 from strawberry.federation.schema_directives import Shareable
@@ -37,8 +37,8 @@ class PageInfo(Generic[GenericType]):
     # when used in multiple services
     has_next_page: bool = strawberry.field(directives=[Shareable()])
     has_previous_page: bool = strawberry.field(directives=[Shareable()])
-    start_cursor: Optional[str] = strawberry.field(directives=[Shareable()])
-    end_cursor: Optional[str] = strawberry.field(directives=[Shareable()])
+    start_cursor: str | None = strawberry.field(directives=[Shareable()])
+    end_cursor: str | None = strawberry.field(directives=[Shareable()])
 
 
 @strawberry.type
