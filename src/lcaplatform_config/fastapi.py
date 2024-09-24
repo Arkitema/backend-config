@@ -13,8 +13,6 @@ except (ImportError, ModuleNotFoundError):
 try:
     from lcaplatform_config.connection import get_db
 
-    db_url = settings.SQLALCHEMY_DATABASE_URI
-
     async def get_context(session=Depends(get_db), user=Security(azure_scheme)):  # type: ignore
         return {"session": session, "user": user}
 
