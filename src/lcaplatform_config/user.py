@@ -121,7 +121,7 @@ async def get_users_from_azure(user_ids: str | list[str]) -> list[dict[str, str]
                     email = user.userPrincipalName
                 else:
                     email = "NA"
-            user.last_login = None
+            last_login = None
             if user.sign_in_activity:
                 last_login = user.sign_in_activity.last_sign_in_date_time
             users[user.id] = {  # type: ignore
