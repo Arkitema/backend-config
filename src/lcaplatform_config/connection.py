@@ -41,7 +41,7 @@ def create_postgres_engine(as_async: bool = True) -> AsyncEngine | Any:
         )
 
 
-async def get_db() -> AsyncGenerator[async_scoped_session[AsyncSession], None]:
+async def get_db() -> AsyncGenerator[AsyncSession, None]:
     local_session = async_sessionmaker(
         autocommit=False,
         autoflush=False,
@@ -49,7 +49,8 @@ async def get_db() -> AsyncGenerator[async_scoped_session[AsyncSession], None]:
         class_=AsyncSession,
         expire_on_commit=False,
     )
-    session = async_scoped_session(local_session, scopefunc=current_task)
+    AsyncScopedSession = async_scoped_session(local_session, scopefunc=current_task)
+    session = AsyncScopedSession()
     try:
         yield session
     except Exception as e:
