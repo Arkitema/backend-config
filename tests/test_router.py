@@ -22,7 +22,18 @@ def mock_router(mocker) -> None:
 @pytest.fixture
 def mock_response(mocker) -> MagicMock:
     """Mock the strawberry ExecutionResult class as it is not needed for the test."""
-    yield mocker.patch("strawberry.types.ExecutionResult", spec_set=ExecutionResult)
+    return_dict = {"data": {"test": "test"}, "errors": None, "extensions": None}
+    yield ExecutionResult(**return_dict)
+
+
+@pytest.fixture
+def error_response(mocker) -> MagicMock:
+    """Mock the strawberry ExecutionResult class as it is not needed for the test."""
+    error_mock = mocker.MagicMock()
+    error_mock.path = "/path"
+    error_mock.message = "error"
+    return_dict = {"data": {"test": "test"}, "errors": [error_mock], "extensions": None}
+    yield ExecutionResult(**return_dict)
 
 
 @pytest.fixture
@@ -42,6 +53,7 @@ def mock_request_0(mocker) -> MagicMock:
     response = {"query": query, "variables": None}
     json_mock = AsyncMock(return_value=response)
     request_mock = mocker.patch("fastapi.Request")
+    request_mock.state.user.verified_primary_email = "user@mail.com"
     request_mock.json = json_mock
     yield request_mock
 
@@ -54,15 +66,16 @@ def mock_request_1(mocker) -> MagicMock:
     """
 
     query = """query getArkitemaProject($projectId: String!) {
-        arkitemaProject(projectId: $projectId) {
+        lcaProject(projectId: $projectId) {
             id
             name
             __typename
         }
     }"""
-    response = {"query": query, "variables": None}
+    response = {"query": query, "variables": {"projectId": "COWI ATR"}}
     json_mock = AsyncMock(return_value=response)
     request_mock = mocker.patch("fastapi.Request")
+    request_mock.state.user.verified_primary_email = "user@mail.com"
     request_mock.json = json_mock
     yield request_mock
 
@@ -77,7 +90,7 @@ async def test_router_logs_graphql_path_no_variables(
 
     assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
     assert log.levelname == "INFO"
-    assert log.message == 'Calling GraphQL path: "tags"'
+    assert log.message == 'User: "user@mail.com", GraphQL path: "tags", vars: "None"'
 
 
 @pytest.mark.asyncio
@@ -90,4 +103,20 @@ async def test_router_logs_graphql_path_with_variables(
 
     assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
     assert log.levelname == "INFO"
-    assert log.message == 'Calling GraphQL path: "arkitemaProject"'
+    assert log.message == 'User: "user@mail.com", GraphQL path: "lcaProject", vars: "{\'projectId\': \'COWI ATR\'}"'
+
+
+@pytest.mark.asyncio
+async def test_router_logs_graphql_path_with_error(
+    mock_request_1: MagicMock, error_response: MagicMock, mock_router: MagicMock, caplog
+):
+    """Test that the logger outputs the GraphQL path at INFO level when the query contains variables."""
+    with caplog.at_level(logging.INFO):
+        await LCAGraphQLRouter().process_result(mock_request_1, error_response)
+
+    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
+    assert log.levelname == "ERROR"
+    assert (
+        log.message
+        == 'User: "user@mail.com", GraphQL path: "/path", msg: "error", vars: "{\'projectId\': \'COWI ATR\'}"'
+    )

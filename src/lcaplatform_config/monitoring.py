@@ -115,4 +115,4 @@ def setting_otlp(app: ASGIApp, app_name: str, endpoint: str, log_correlation: bo
     if log_correlation:
         LoggingInstrumentor().instrument(set_logging_format=True)
 
-    FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)  # type: ignore
+    FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
