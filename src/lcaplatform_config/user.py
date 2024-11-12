@@ -116,9 +116,9 @@ async def get_users_from_azure(user_ids: str | list[str]) -> list[dict[str, str]
             if not email:
                 if re.match(
                     r"^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$",
-                    user.userPrincipalName or "",
+                    user.user_principal_name or "",
                 ):
-                    email = user.userPrincipalName
+                    email = user.user_principal_name
                 else:
                     email = "NA"
             last_login = None
