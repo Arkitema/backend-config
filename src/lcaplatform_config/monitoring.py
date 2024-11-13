@@ -46,6 +46,10 @@ REQUESTS_IN_PROGRESS = Gauge(
 class EndpointFilter(logging.Filter):
     # Uvicorn endpoint access log filter
     def filter(self, record: logging.LogRecord) -> bool:
+        # used for logging file configs, default values
+        record.otelTraceID = getattr(record, "otelTraceID", "")
+        record.otelSpanID = getattr(record, "otelSpanID", "")
+        record.otelServiceName = getattr(record, "otelServiceName", "")
         return record.getMessage().find("GET /metrics") == -1
 
 

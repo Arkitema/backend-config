@@ -53,7 +53,7 @@ def mock_request_0(mocker) -> MagicMock:
     response = {"query": query, "variables": None}
     json_mock = AsyncMock(return_value=response)
     request_mock = mocker.patch("fastapi.Request")
-    request_mock.state.user.verified_primary_email = "user@mail.com"
+    request_mock.state.user.preferred_username = "user@mail.com"
     request_mock.json = json_mock
     yield request_mock
 
@@ -75,7 +75,7 @@ def mock_request_1(mocker) -> MagicMock:
     response = {"query": query, "variables": {"projectId": "COWI ATR"}}
     json_mock = AsyncMock(return_value=response)
     request_mock = mocker.patch("fastapi.Request")
-    request_mock.state.user.verified_primary_email = "user@mail.com"
+    request_mock.state.user.preferred_username = "user@mail.com"
     request_mock.json = json_mock
     yield request_mock
 
