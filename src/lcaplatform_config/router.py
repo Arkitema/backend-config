@@ -40,9 +40,12 @@ class LCAGraphQLRouter(GraphQLRouter):
 
         variables = parsed_request.get("variables", "")
         user = getattr(request.state, "user", "")
-        email = ""
+        user_name = ""
         if user:
-            email = getattr(user, "verified_primary_email", "")
+            p_name = getattr(user, "preferred_username", "")
+            email = getattr(user, "email", "")
+            name = getattr(user, "name", "")
+            user_name = p_name or email or name
 
         if settings.ENABLE_TELEMETRY:
             headers = {}  # type: ignore
@@ -51,9 +54,9 @@ class LCAGraphQLRouter(GraphQLRouter):
         if result.errors:
             for error in result.errors:
                 logger.error(
-                    f'User: "{email}", GraphQL path: "{error.path}", msg: "{error.message}", vars: "{variables}"'
+                    f'User: "{user_name}", GraphQL path: "{error.path}", msg: "{error.message}", vars: "{variables}"'
                 )
         else:
-            logger.info(f'User: "{email}", GraphQL path: "{path}", vars: "{variables}"')
+            logger.info(f'User: "{user_name}", GraphQL path: "{path}", vars: "{variables}"')
 
         return await super().process_result(request, result)
