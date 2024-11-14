@@ -1,6 +1,5 @@
-import logging
+import logging.config
 from lcaplatform_config.monitoring import EndpointFilter
-from logging import Logger
 
 try:
     from core.config import settings
@@ -28,7 +27,7 @@ def _set_configuration() -> str:
         return "default"
 
 
-def config_logging(logger_name: str) -> Logger:
+def config_logging(logger_name: str) -> logging.Logger:
     """
     Return Logger based on telemetry parameters
     Args:
