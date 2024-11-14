@@ -78,6 +78,7 @@ env = [
     "SENDGRID_SECRET=c2VjcmV0",
     "EMAIL_NOTIFICATION_FROM=no-reply@arkitema.com",
     "INTERNAL_EMAIL_DOMAINS_LIST=arkitema,cowi,cowicloud",
+    "ENABLE_TELEMETRY=false",
 ]
 
 [tool.coverage.run]
