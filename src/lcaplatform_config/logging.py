@@ -1,5 +1,6 @@
 import logging.config
 from lcaplatform_config.monitoring import EndpointFilter
+from os import path
 
 try:
     from core.config import settings
@@ -17,13 +18,14 @@ def _set_configuration() -> str:
     Returns:
         str: telemetry or default
     """
-    if settings.ENABLE_TELEMETRY:
+    absolute_path = path.dirname(path.abspath(__file__))
+    if not settings.ENABLE_TELEMETRY:
         # adding trace id for logging
-        logging.config.fileConfig("logging_traces.conf", disable_existing_loggers=False)
+        logging.config.fileConfig(path.join(absolute_path, "logging_traces.conf"), disable_existing_loggers=False)
         return "telemetry"
     else:
         # default configuration without metrics
-        logging.config.fileConfig("logging.conf", disable_existing_loggers=False)
+        logging.config.fileConfig(path.join(absolute_path, "logging.conf"), disable_existing_loggers=False)
         return "default"
 
 
