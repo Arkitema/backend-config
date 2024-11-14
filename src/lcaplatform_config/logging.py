@@ -19,7 +19,7 @@ def _set_configuration() -> str:
         str: telemetry or default
     """
     absolute_path = path.dirname(path.abspath(__file__))
-    if not settings.ENABLE_TELEMETRY:
+    if settings.ENABLE_TELEMETRY:
         # adding trace id for logging
         logging.config.fileConfig(path.join(absolute_path, "logging_traces.conf"), disable_existing_loggers=False)
         return "telemetry"
