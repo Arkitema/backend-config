@@ -1,10 +1,9 @@
-import logging
-
 from fastapi import Request
 from strawberry.fastapi import GraphQLRouter
 from strawberry.http import GraphQLHTTPResponse
 from strawberry.types import ExecutionResult
 from opentelemetry.propagate import inject
+from lcaplatform_config.logging import config_logging
 
 try:
     from core.config import settings
@@ -13,11 +12,7 @@ except (ImportError, ModuleNotFoundError):
 
     settings = config.Settings()
 
-if settings.ENABLE_TELEMETRY:
-    # need to use same naming as in logging file for formatters, trace_id
-    logger = logging.getLogger("uvicorn.access")
-else:
-    logger = logging.getLogger(__name__)
+logger = config_logging(__name__)
 
 
 class LCAGraphQLRouter(GraphQLRouter):
