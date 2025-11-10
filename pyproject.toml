@@ -9,10 +9,10 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = "^3.12"
 pydantic = "*"
 fastapi = {extras = ["all"], version = "*"}  # https://github.com/fastapi/fastapi/issues/11143
-strawberry-graphql = {extras = ["fastapi"], version = ">=0.164.0"}
+strawberry-graphql = {extras = ["fastapi"], version = "*"}
 fastapi-azure-auth = ">=4.0.0"
 aiocache = "*"
 SQLAlchemy = {extras = ["asyncio"], version = "*"}
