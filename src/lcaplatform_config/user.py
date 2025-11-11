@@ -1,3 +1,4 @@
+import logging
 import re
 
 from aiocache import Cache
@@ -18,6 +19,8 @@ except (ImportError, ModuleNotFoundError):
     settings = config.Settings()
 
 cache = Cache()
+
+logger = logging.getLogger(__name__)
 
 
 def get_credentials() -> ClientSecretCredential:
@@ -108,7 +111,8 @@ async def get_users_from_azure(user_ids: str | list[str]) -> list[dict[str, str]
     for user_id in missing_users:
         try:
             user = await graph.users.by_user_id(user_id).get(request_configuration=request_configuration)
-        except Exception:
+        except Exception as e:
+            logger.error(f"Failed to fetch user {user_id} via Graph API: {e}")
             raise exceptions.MSGraphException(f"Failed to fetch users via Graph API: {user_id}")
         if user:
             email = user.mail

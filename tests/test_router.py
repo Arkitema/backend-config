@@ -88,7 +88,7 @@ async def test_router_logs_graphql_path_no_variables(
     with caplog.at_level(logging.INFO):
         await LCAGraphQLRouter().process_result(mock_request_0, mock_response)
 
-    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
+    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF015
     assert log.levelname == "INFO"
     assert log.message == 'User: "user@mail.com", GraphQL path: "tags", vars: "None"'
 
@@ -101,7 +101,7 @@ async def test_router_logs_graphql_path_with_variables(
     with caplog.at_level(logging.INFO):
         await LCAGraphQLRouter().process_result(mock_request_1, mock_response)
 
-    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
+    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF015
     assert log.levelname == "INFO"
     assert log.message == 'User: "user@mail.com", GraphQL path: "lcaProject", vars: "{\'projectId\': \'COWI ATR\'}"'
 
@@ -114,7 +114,7 @@ async def test_router_logs_graphql_path_with_error(
     with caplog.at_level(logging.INFO):
         await LCAGraphQLRouter().process_result(mock_request_1, error_response)
 
-    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF018 RUF015
+    assert (log := [record for record in caplog.records if record.funcName == "process_result"][0])  # noqa: RUF015
     assert log.levelname == "ERROR"
     assert (
         log.message
